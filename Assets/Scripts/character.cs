@@ -18,7 +18,9 @@ public class character : MonoBehaviour {
 	private bool right = false;
 
 
-
+	public AudioSource audioSource;
+	public AudioClip pickupClip;
+	public AudioClip ejectWeapon;
 
 
 	// Use this for initialization
@@ -125,6 +127,10 @@ public class character : MonoBehaviour {
 					Debug.Log (hit.collider.tag);
 
 				if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
+
+					audioSource.clip = pickupClip;
+					audioSource.Play();
+
 					weapon = hit.collider.gameObject;
 
 					if (weapon.GetComponent<Rigidbody2D>()) {
@@ -144,7 +150,6 @@ public class character : MonoBehaviour {
 		}
 
 		if (Input.GetMouseButtonDown (0) && weapon) {
-			Debug.Log ("mouse down");
 			weapon.SendMessage("startAttack", this.gameObject.GetComponent<Collider2D>(), SendMessageOptions.DontRequireReceiver);
 		}
 
@@ -154,6 +159,8 @@ public class character : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown (1) && weapon) {
 			//weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+			audioSource.clip = ejectWeapon;
+			audioSource.Play();
 
 			float distance = Vector3.Distance(new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f) , transform.position);
 

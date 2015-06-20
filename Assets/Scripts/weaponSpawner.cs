@@ -14,4 +14,9 @@ public class weaponSpawner : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	void OnDrawGizmos()
+	{
+		Gizmos.DrawIcon(transform.position, "weaponSpawner.png", true);
+	}
 }

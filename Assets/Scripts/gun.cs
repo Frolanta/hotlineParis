@@ -10,17 +10,20 @@ public class gun : MonoBehaviour {
 
 	public int ammo;
 
-	public string name;
+	public string weaponName;
 
 	public GameObject projectile;
 	private IEnumerator routine;
 
 	private Animator animator;
 
+	private AudioSource audioSource;
+
 
 	// Use this for initialization
 	void Start () {
 		animator = this.gameObject.GetComponent<Animator> ();
+		audioSource = this.gameObject.GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -47,6 +50,7 @@ public class gun : MonoBehaviour {
 				GameObject ob = (GameObject)Instantiate(projectile, this.transform.position, this.transform.rotation);
 				ob.GetComponent<projectile>().ignoreCollider(ignore);
 				ammo--;
+				audioSource.Play();
 				if (ammo == 0) {
 					animator.SetBool("noAmmo", true);
 				}
