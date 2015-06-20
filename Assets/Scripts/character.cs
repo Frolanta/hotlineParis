@@ -73,6 +73,9 @@ public class character : MonoBehaviour {
 
 			RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero, 0f);
 
+			if (hit.collider)
+				Debug.Log (hit.collider.tag);
+
 			if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
 				weapon = hit.collider.gameObject;
 				weapon.transform.position = Vector3.zero;
