@@ -127,9 +127,6 @@ public class character : MonoBehaviour {
 
 			foreach (RaycastHit2D hit in hits) {
 
-				if (hit.collider)
-					Debug.Log (hit.collider.tag);
-
 				if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
 
 					audioSource.clip = pickupClip;
@@ -153,6 +150,10 @@ public class character : MonoBehaviour {
 				}
 			}
 
+		}
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			Application.LoadLevel(Application.loadedLevel);
 		}
 
 		if (Input.GetMouseButtonDown (0) && weapon) {

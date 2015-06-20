@@ -35,8 +35,6 @@ public class weapon : MonoBehaviour {
 
 	public void drop(float force, Collider2D ignore) {
 
-		Debug.Log (force);
-
 		float drag = 5.0f;
 
 		show ();
