@@ -6,7 +6,8 @@ public class projectile : MonoBehaviour {
 	public float speed;
 
 	private Rigidbody2D rb;
-
+	public float lifeTime = 2.0f;
+	
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D> ();
@@ -15,7 +16,10 @@ public class projectile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		lifeTime -= Time.deltaTime;
+		if (lifeTime < 0) {
+			Destroy(this.gameObject);
+		}
 	}
 
 	public void ignoreCollider(Collider2D c) {

@@ -10,6 +10,8 @@ public class gun : MonoBehaviour {
 
 	public int ammo;
 
+
+
 	public GameObject projectile;
 	private IEnumerator routine;
 
@@ -26,7 +28,7 @@ public class gun : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	public void startAttack(Collider2D ignore) {
@@ -42,12 +44,13 @@ public class gun : MonoBehaviour {
 	}
 
 	IEnumerator attackRoutine (Collider2D ignore) {
-		while (ammo > 0) {
+		while (ammo > 0 || ammo == -1) {
 
 			for (int i = 0 ; i < burstCount ; i++) {
 				GameObject ob = (GameObject)Instantiate(projectile, this.transform.position, this.transform.rotation);
 				ob.GetComponent<projectile>().ignoreCollider(ignore);
-				ammo--;
+				if (ammo > 0)
+					ammo--;
 				audioSource.Play();
 				if (ammo == 0) {
 					animator.SetBool("noAmmo", true);
