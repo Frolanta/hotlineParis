@@ -4,10 +4,11 @@ using System.Collections;
 public class character : MonoBehaviour {
 
 	public float speed = 2.0f;
-	
-	private Rigidbody2D rb;
 	public Animator legAnimator;
+	public GameObject attachWeapon;
 
+	private GameObject weapon = null;
+	private Rigidbody2D rb;
 	private bool walking = false;
 
 	// Use this for initialization
@@ -17,9 +18,6 @@ public class character : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
-		Vector3 mp = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		this.gameObject.transform.rotation = Quaternion.LookRotation (Vector3.forward, new Vector3(mp.x, mp.y, 0.0f) - transform.position);
 	
 		Vector3 vel = new Vector3();
 		
@@ -57,6 +55,41 @@ public class character : MonoBehaviour {
 		} else if (walking) {
 			walking = false;
 			legAnimator.SetBool("walk", false);
+		}
+
+
+		//rotation
+		Vector3 mousePos = Input.mousePosition;
+		
+		Vector3 objectPos = Camera.main.WorldToScreenPoint (transform.position);
+		mousePos.x = mousePos.x - objectPos.x;
+		mousePos.y = mousePos.y - objectPos.y;
+		
+		float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90.0f));
+
+		//weapon pikup
+		if (Input.GetKeyDown (KeyCode.E)) {
+
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero, 0f);
+
+			if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
+				weapon = hit.collider.gameObject;
+				weapon.transform.position = Vector3.zero;
+				weapon.transform.SetParent(attachWeapon.transform, false);
+				weapon.GetComponent<weapon>().hide ();
+				attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
+			}
+
+		}
+
+		if (Input.GetMouseButtonDown (0) && weapon) {
+			Debug.Log ("mouse down");
+			weapon.SendMessage("startAttack", null, SendMessageOptions.DontRequireReceiver);
+		}
+
+		if (Input.GetMouseButtonUp (0) && weapon) {
+			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 		}
 
 	}
