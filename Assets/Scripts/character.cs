@@ -71,28 +71,40 @@ public class character : MonoBehaviour {
 		//weapon pikup
 		if (Input.GetKeyDown (KeyCode.E)) {
 
-			RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.zero, 0f);
+			RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.zero, 0f);
 
-			if (hit.collider)
-				Debug.Log (hit.collider.tag);
+			foreach (RaycastHit2D hit in hits) {
 
-			if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
-				weapon = hit.collider.gameObject;
-				weapon.transform.position = Vector3.zero;
-				weapon.transform.SetParent(attachWeapon.transform, false);
-				weapon.GetComponent<weapon>().hide ();
-				attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
+				if (hit.collider)
+					Debug.Log (hit.collider.tag);
+
+				if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
+					weapon = hit.collider.gameObject;
+					weapon.transform.position = Vector3.zero;
+					weapon.transform.SetParent(attachWeapon.transform, false);
+					weapon.GetComponent<weapon>().hide ();
+					attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
+				}
 			}
 
 		}
 
 		if (Input.GetMouseButtonDown (0) && weapon) {
 			Debug.Log ("mouse down");
-			weapon.SendMessage("startAttack", null, SendMessageOptions.DontRequireReceiver);
+			weapon.SendMessage("startAttack", this.gameObject.GetComponent<Collider2D>(), SendMessageOptions.DontRequireReceiver);
 		}
 
 		if (Input.GetMouseButtonUp (0) && weapon) {
 			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+		}
+
+		if (Input.GetMouseButtonDown (1) && weapon) {
+			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+
+			Vector3 heading = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
+			float distance = heading.magnitude;
+
+			weapon.GetComponent<weapon>().drop(distance);
 		}
 
 	}

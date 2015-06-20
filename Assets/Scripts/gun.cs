@@ -13,7 +13,6 @@ public class gun : MonoBehaviour {
 	public string name;
 
 	public GameObject projectile;
-
 	private IEnumerator routine;
 
 
@@ -27,10 +26,10 @@ public class gun : MonoBehaviour {
 	
 	}
 
-	public void startAttack() {
+	public void startAttack(Collider2D ignore) {
 		if (ammo == 0)
 			return ;
-		routine = attackRoutine ();
+		routine = attackRoutine (ignore);
 		StartCoroutine (routine);
 	}
 
@@ -38,11 +37,12 @@ public class gun : MonoBehaviour {
 		StopCoroutine (routine);
 	}
 
-	IEnumerator attackRoutine () {
+	IEnumerator attackRoutine (Collider2D ignore) {
 		while (ammo > 0) {
 
 			for (int i = 0 ; i < burstCount ; i++) {
-				Debug.Log ("shot : " + ammo);
+				GameObject ob = (GameObject)Instantiate(projectile, this.transform.position, this.transform.rotation);
+				ob.GetComponent<projectile>().ignoreCollider(ignore);
 				ammo--;
 				yield return new WaitForSeconds(burstFireRate);
 			}
