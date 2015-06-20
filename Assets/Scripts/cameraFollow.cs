@@ -8,7 +8,7 @@ public class cameraFollow : MonoBehaviour {
 	public Transform target;
 	
 	// Update is called once per frame
-	void LateUpdate () 
+	void FixedUpdate () 
 	{
 		if (target)
 		{

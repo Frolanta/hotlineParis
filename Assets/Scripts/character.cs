@@ -11,43 +11,51 @@ public class character : MonoBehaviour {
 	private Rigidbody2D rb;
 	private bool walking = false;
 
+
+	private bool up = false;
+	private bool down = false;
+	private bool left = false;
+	private bool right = false;
+
+
+
+
+
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D> ();
 	}
 
-	// Update is called once per frame
-	void Update () {
-	
+
+	void FixedUpdate() {
+
 		Vector3 vel = new Vector3();
 		
-		if(Input.GetKey(KeyCode.W)){
+		if(up){
 			Vector3 velUp = new Vector3();
 			velUp.y = 1;
 			vel += velUp;
-		}
-		else if(Input.GetKey(KeyCode.S)){
+		} else if(down) {
 			Vector3 velDown = new Vector3();
 			velDown.y = -1;
 			vel += velDown;
 		}
-
-		if(Input.GetKey(KeyCode.A)){
+		
+		if (left) {
 			Vector3 velLeft = new Vector3();
 			velLeft.x = -1;
 			vel += velLeft;
-		}
-		else if(Input.GetKey(KeyCode.D)){
+		} else if(right){
 			Vector3 velRight = new Vector3();
 			velRight.x = 1;
 			vel += velRight;
 		}
-
+		
 		if (vel.magnitude > 0.001) {
 			Vector3.Normalize(vel);
 			vel *= speed;
 			rb.velocity = vel;
-
+			
 			if (!walking) {
 				walking = true;
 				legAnimator.SetBool("walk", true);
@@ -56,6 +64,44 @@ public class character : MonoBehaviour {
 			walking = false;
 			legAnimator.SetBool("walk", false);
 		}
+	}
+
+	// Update is called once per frame
+	void Update () {
+	
+
+		if(Input.GetKey(KeyCode.W)){
+			up = true;
+			down = false;
+		}
+		else if(Input.GetKey(KeyCode.S)){
+			up = false;
+			down = true;
+		}
+		
+		if(Input.GetKey(KeyCode.A)){
+			left = true;
+			right = false;
+		}
+		else if(Input.GetKey(KeyCode.D)){
+			left = false;
+			right = true;
+		}
+
+		if(Input.GetKeyUp(KeyCode.W)){
+			up = false;
+		}
+		if(Input.GetKeyUp(KeyCode.S)){
+			down = false;
+		}
+		
+		if(Input.GetKeyUp(KeyCode.A)){
+			left = false;
+		}
+		if(Input.GetKeyUp(KeyCode.D)){
+			right = false;
+		}
+
 
 
 		//rotation
@@ -80,10 +126,18 @@ public class character : MonoBehaviour {
 
 				if (hit.collider && hit.collider.tag == "weapon" && weapon == null) {
 					weapon = hit.collider.gameObject;
+
+					if (weapon.GetComponent<Rigidbody2D>()) {
+						Destroy(weapon.GetComponent<Rigidbody2D>());
+					}
+
 					weapon.transform.position = Vector3.zero;
+					weapon.transform.rotation = Quaternion.identity;
 					weapon.transform.SetParent(attachWeapon.transform, false);
+
 					weapon.GetComponent<weapon>().hide ();
 					attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
+
 				}
 			}
 
@@ -99,12 +153,14 @@ public class character : MonoBehaviour {
 		}
 
 		if (Input.GetMouseButtonDown (1) && weapon) {
-			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+			//weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 
-			Vector3 heading = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position);
-			float distance = heading.magnitude;
+			float distance = Vector3.Distance(new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f) , transform.position);
 
-			weapon.GetComponent<weapon>().drop(distance);
+
+			weapon.GetComponent<weapon>().drop(distance, this.gameObject.GetComponent<Collider2D>());
+			weapon = null;
+			attachWeapon.GetComponent<SpriteRenderer>().sprite = null;
 		}
 
 	}

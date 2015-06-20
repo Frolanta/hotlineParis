@@ -15,10 +15,12 @@ public class gun : MonoBehaviour {
 	public GameObject projectile;
 	private IEnumerator routine;
 
+	private Animator animator;
+
 
 	// Use this for initialization
 	void Start () {
-	
+		animator = this.gameObject.GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
@@ -27,8 +29,9 @@ public class gun : MonoBehaviour {
 	}
 
 	public void startAttack(Collider2D ignore) {
-		if (ammo == 0)
-			return ;
+		if (ammo == 0) {
+			return;
+		}
 		routine = attackRoutine (ignore);
 		StartCoroutine (routine);
 	}
@@ -44,6 +47,9 @@ public class gun : MonoBehaviour {
 				GameObject ob = (GameObject)Instantiate(projectile, this.transform.position, this.transform.rotation);
 				ob.GetComponent<projectile>().ignoreCollider(ignore);
 				ammo--;
+				if (ammo == 0) {
+					animator.SetBool("noAmmo", true);
+				}
 				yield return new WaitForSeconds(burstFireRate);
 			}
 

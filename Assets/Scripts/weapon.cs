@@ -6,6 +6,9 @@ public class weapon : MonoBehaviour {
 	public Sprite attachBodySprite;
 	private SpriteRenderer sr;
 
+	private Collider2D ignoreCollider;
+
+
 	// Use this for initialization
 	void Start () {
 		sr = gameObject.GetComponent<SpriteRenderer> ();
@@ -28,19 +31,36 @@ public class weapon : MonoBehaviour {
 		sr.enabled = true;
 	}
 
-	public void drop(float force) {
+	public void drop(float force, Collider2D ignore) {
+
+		Debug.Log (force);
+
+		float drag = 5.0f;
+
 		show ();
+		ignoreCollider = ignore;
 		this.transform.SetParent (null);
 		this.gameObject.GetComponent<Collider2D> ().isTrigger = false;
-		this.gameObject.AddComponent<Rigidbody2D> ();
-		this.gameObject.GetComponent<Rigidbody2D> ().AddRelativeForce (Vector3.down * force, ForceMode2D.Impulse);
+		if (!this.gameObject.GetComponent<Rigidbody2D> ())
+			this.gameObject.AddComponent<Rigidbody2D> ();
+
+		Rigidbody2D rb = this.gameObject.GetComponent<Rigidbody2D> ();
+
+		rb.drag = drag;
+		rb.angularDrag = 1;
+		rb.AddTorque (force / 2.0f, ForceMode2D.Impulse);
+		rb.AddRelativeForce (Vector3.down * force * drag, ForceMode2D.Impulse);
+
+		Physics2D.IgnoreCollision (ignoreCollider, gameObject.GetComponent<Collider2D> (), true);
 
 		Invoke ("pickable", 2);
 	}
 
 	public void pickable() {
 		this.gameObject.GetComponent<Collider2D> ().isTrigger = true;
-		Destroy(this.gameObject.GetComponent<Rigidbody2D> ());
+		if (this.gameObject.GetComponent<Rigidbody2D> ())
+			Destroy(this.gameObject.GetComponent<Rigidbody2D> ());
+		Physics2D.IgnoreCollision (ignoreCollider, gameObject.GetComponent<Collider2D> (), false);
 	}
 
 
