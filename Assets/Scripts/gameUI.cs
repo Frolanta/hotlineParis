@@ -1,12 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class gameUI : MonoBehaviour {
 
 	public Texture2D crosshair;
+	public Text weaponName;
+	public Text ammoCount;
+
+
+	public static gameUI instance;
+
+	void Awake () {
+		if (instance == null) {
+			instance = this;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
+		hideWeaponInfo ();
 		Cursor.SetCursor (crosshair, Vector2.zero, CursorMode.Auto);
 	}
 	
@@ -14,4 +27,21 @@ public class gameUI : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public void setWeapon(string str) {
+		weaponName.text = str;
+	}
+
+	public void setAmmo(int nb) {
+		if (nb == -1)
+			ammoCount.text = "inf";
+		else
+			ammoCount.text = "" + nb;
+	}
+
+	public void hideWeaponInfo() {
+		weaponName.text = "";
+		ammoCount.text = "";
+	}
+	
 }

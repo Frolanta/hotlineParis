@@ -4,6 +4,8 @@ using System.Collections;
 public class weapon : MonoBehaviour {
 
 	public Sprite attachBodySprite;
+	
+	public string weaponName;
 	private SpriteRenderer sr;
 
 	private Collider2D ignoreCollider;

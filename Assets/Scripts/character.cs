@@ -70,6 +70,10 @@ public class character : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		if (weapon && weapon.GetComponent<gun> ()) {
+			gameUI.instance.setAmmo(weapon.GetComponent<gun> ().ammo);
+		}
 	
 
 		if(Input.GetKey(KeyCode.W)){
@@ -141,6 +145,8 @@ public class character : MonoBehaviour {
 					weapon.transform.rotation = Quaternion.identity;
 					weapon.transform.SetParent(attachWeapon.transform, false);
 
+					gameUI.instance.setWeapon(weapon.GetComponent<weapon>().weaponName);
+
 					weapon.GetComponent<weapon>().hide ();
 					attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
 
@@ -161,6 +167,8 @@ public class character : MonoBehaviour {
 			//weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 			audioSource.clip = ejectWeapon;
 			audioSource.Play();
+
+			gameUI.instance.hideWeaponInfo();
 
 			float distance = Vector3.Distance(new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f) , transform.position);
 

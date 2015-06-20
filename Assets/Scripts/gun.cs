@@ -10,8 +10,6 @@ public class gun : MonoBehaviour {
 
 	public int ammo;
 
-	public string weaponName;
-
 	public GameObject projectile;
 	private IEnumerator routine;
 
