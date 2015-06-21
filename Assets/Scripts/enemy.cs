@@ -310,6 +310,10 @@ public class enemy : MonoBehaviour {
 			else if (!stun && collision.gameObject.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 15.0f) {
 				Stun();
 			}
+		} else if (collision.gameObject.tag == "door") {
+			if (!stun && collision.gameObject.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 5.0f) {
+				Stun();
+			}
 		}
 	}
 
