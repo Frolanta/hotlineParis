@@ -61,7 +61,7 @@ public class enemy : MonoBehaviour {
 			}
 
 
-		} else if (shouldCheck && richable(checkPosition)) {
+		} else if (shouldCheck) {
 
 			rb.MovePosition (transform.position + getDirection (checkPosition) * speed * Time.fixedDeltaTime);
 			lookAtPosition (checkPosition);
@@ -97,7 +97,7 @@ public class enemy : MonoBehaviour {
 	}
 
 
-	void richable(Vector3 pos) {
+	bool richable(Vector3 pos) {
 		LayerMask layerMask = ~(1 << LayerMask.NameToLayer ("enemy") | 1 << LayerMask.NameToLayer ("weapon"));
 		
 		float maxRange = Vector3.Distance(transform.position, pos);
