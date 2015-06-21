@@ -160,6 +160,14 @@ public class character : MonoBehaviour {
 		}
 
 		if (Input.GetMouseButtonDown (0) && weapon) {
+
+			GameObject[] ememies = GameObject.FindGameObjectsWithTag("enemy");
+
+			foreach (GameObject e in ememies) {
+				e.SendMessage("heardSound", this.transform.position, SendMessageOptions.DontRequireReceiver);
+			}
+
+
 			weapon.SendMessage("startAttack", this.gameObject.GetComponent<Collider2D>(), SendMessageOptions.DontRequireReceiver);
 		}
 

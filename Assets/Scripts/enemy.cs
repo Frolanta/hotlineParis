@@ -22,7 +22,7 @@ public class enemy : MonoBehaviour {
 
 	private Transform target;
 	private Vector3 checkPosition;
-	private bool shouldCheck;
+	public bool shouldCheck = false;
 
 	private Vector3 intermediatePos;
 	private bool hasIntermediate;
@@ -30,11 +30,16 @@ public class enemy : MonoBehaviour {
 
 	private List<Vector3> exits;
 
+	public float headSoundRadius = 7.0f;
+
 
 	public AudioSource audioSource;
 	public Animator animator;
 
 	private bool stun = false;
+
+	public float StartTargetTime = 3.0f;
+	private float targetTime = 0.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -74,6 +79,12 @@ public class enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		targetTime -= Time.deltaTime;
+
+		if ((target || shouldCheck) && targetTime <= 0.0f) {
+			target = null;
+			shouldCheck = false;
+		}
 	}
 
 	void FixedUpdate() {
@@ -125,8 +136,6 @@ public class enemy : MonoBehaviour {
 		} else if (Vector3.Distance (transform.position, nextCheckpoint) >= speed * Time.fixedDeltaTime && richable(nextCheckpoint)) {
 			rb.MovePosition (transform.position + getDirection (nextCheckpoint) * speed * Time.fixedDeltaTime);
 			lookAtPosition (nextCheckpoint);
-		} else {
-			transform.rotation = Quaternion.identity;
 		}
 
 	}
@@ -223,6 +232,7 @@ public class enemy : MonoBehaviour {
 				if (!target)
 					weapon.SendMessage("startAttack", this.gameObject.GetComponent<Collider2D>(), SendMessageOptions.DontRequireReceiver);
 
+				targetTime = StartTargetTime;
 				target = other.transform;
 
 
@@ -230,6 +240,7 @@ public class enemy : MonoBehaviour {
 				Debug.DrawLine(transform.position, other.transform.position, Color.red, 0.5f, false);
 				checkPosition = new Vector3 (target.position.x, target.position.y, target.position.z);
 				shouldCheck = true;
+				targetTime = StartTargetTime;
 				target = null;
 
 				weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
@@ -248,6 +259,7 @@ public class enemy : MonoBehaviour {
 			if (target) {
 				checkPosition = new Vector3 (target.position.x, target.position.y, target.position.z);
 				shouldCheck = true;
+				targetTime = StartTargetTime;
 				target = null;
 			}
 		} 
@@ -282,6 +294,15 @@ public class enemy : MonoBehaviour {
 			else if (!stun && collision.gameObject.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 15.0f) {
 				Stun();
 			}
+		}
+	}
+
+	public void heardSound (Vector3 pos) {
+		if (!stun && !target && Vector3.Distance (transform.position, pos) <= headSoundRadius) {
+			checkPosition = new Vector3 (pos.x, pos.y, pos.z);
+			shouldCheck = true;
+			hasIntermediate = false;
+			targetTime = StartTargetTime;
 		}
 	}
 
