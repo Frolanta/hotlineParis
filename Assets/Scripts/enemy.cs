@@ -36,6 +36,8 @@ public class enemy : MonoBehaviour {
 	public AudioSource audioSource;
 	public Animator animator;
 
+	public Animator legAnimator;
+
 	private bool stun = false;
 
 	public float StartTargetTime = 3.0f;
@@ -99,6 +101,8 @@ public class enemy : MonoBehaviour {
 			rb.MovePosition (transform.position + getDirection (target.position) * speed * Time.fixedDeltaTime);
 			lookAtPosition (target.position);
 
+			legAnimator.SetBool ("walk", true);
+
 		} else if (hasIntermediate) {
 
 
@@ -108,9 +112,11 @@ public class enemy : MonoBehaviour {
 			if (Vector3.Distance (transform.position, intermediatePos) <= Time.fixedDeltaTime * speed) {
 				hasIntermediate = false;
 			}
+
+			legAnimator.SetBool ("walk", true);
 		
 
-		} else if (shouldCheck && richable(checkPosition)) {
+		} else if (shouldCheck && richable (checkPosition)) {
 
 			rb.MovePosition (transform.position + getDirection (checkPosition) * speed * Time.fixedDeltaTime);
 			lookAtPosition (checkPosition);
@@ -118,9 +124,11 @@ public class enemy : MonoBehaviour {
 			if (Vector3.Distance (transform.position, checkPosition) <= Time.fixedDeltaTime * speed) {
 				shouldCheck = false;
 			}
+
+			legAnimator.SetBool ("walk", true);
 		
 
-		} else if (hasCheckpoints && richable(nextCheckpoint)) {
+		} else if (hasCheckpoints && richable (nextCheckpoint)) {
 
 			rb.MovePosition (transform.position + getDirection (nextCheckpoint) * speed * Time.fixedDeltaTime);
 			lookAtPosition (nextCheckpoint);
@@ -133,11 +141,16 @@ public class enemy : MonoBehaviour {
 
 				nextCheckpoint = checkpoints [checkpointIndex].position;
 			}
+
+			legAnimator.SetBool ("walk", true);
 		
 
-		} else if (Vector3.Distance (transform.position, nextCheckpoint) >= speed * Time.fixedDeltaTime && richable(nextCheckpoint)) {
+		} else if (Vector3.Distance (transform.position, nextCheckpoint) >= speed * Time.fixedDeltaTime && richable (nextCheckpoint)) {
 			rb.MovePosition (transform.position + getDirection (nextCheckpoint) * speed * Time.fixedDeltaTime);
 			lookAtPosition (nextCheckpoint);
+			legAnimator.SetBool ("walk", true);
+		} else {
+			legAnimator.SetBool("walk", false);
 		}
 
 	}
@@ -316,6 +329,8 @@ public class enemy : MonoBehaviour {
 		target = null;
 		shouldCheck = false;
 		hasIntermediate = false;
+
+		legAnimator.SetBool ("walk", false);
 
 		Invoke ("unStun", 2);
 	}
