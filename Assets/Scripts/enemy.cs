@@ -82,8 +82,7 @@ public class enemy : MonoBehaviour {
 		targetTime -= Time.deltaTime;
 
 		if ((target || shouldCheck) && targetTime <= 0.0f) {
-			if (target)
-				weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 			target = null;
 			shouldCheck = false;
 
@@ -260,6 +259,7 @@ public class enemy : MonoBehaviour {
 
 		if(other.tag == "Player") {
 			if (target) {
+				weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 				checkPosition = new Vector3 (target.position.x, target.position.y, target.position.z);
 				shouldCheck = true;
 				targetTime = StartTargetTime;
