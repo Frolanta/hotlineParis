@@ -67,14 +67,14 @@ public class enemy : MonoBehaviour {
 
 		} else if (hasIntermediate) {
 
+
 			rb.MovePosition (transform.position + getDirection (intermediatePos) * speed * Time.fixedDeltaTime);
 			lookAtPosition (intermediatePos);
 
 			if (Vector3.Distance (transform.position, intermediatePos) <= Time.fixedDeltaTime * speed) {
-				Debug.Log ("intermediate finish");
 				hasIntermediate = false;
 			}
-
+		
 
 		} else if (shouldCheck && richable(checkPosition)) {
 
@@ -114,7 +114,7 @@ public class enemy : MonoBehaviour {
 
 	bool richable(Vector3 pos) {
 
-		Debug.Log ("richable test");
+;
 		LayerMask layerMask = ~((1 << LayerMask.NameToLayer ("enemy"))
 		                        | (1 << LayerMask.NameToLayer ("weapon"))
 		                        | (1 << LayerMask.NameToLayer ("door"))
@@ -124,12 +124,12 @@ public class enemy : MonoBehaviour {
 		float maxRange = Vector3.Distance(transform.position, pos);
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, (pos - transform.position), maxRange, layerMask);
 
-		Debug.DrawLine(transform.position, pos, Color.green, 0.1f, false);
 
 		if (hit.collider != null) {
 
+			Debug.DrawLine(transform.position, pos, Color.red, 0.1f, false);
 
-			Debug.Log ("not richable : " + hit.collider.tag);
+			;
 
 			Vector3 exit = Vector3.zero;
 			float dist = 10000.0f;
@@ -146,6 +146,9 @@ public class enemy : MonoBehaviour {
 							dist = Vector3.Distance (e, transform.position);
 							exit = e;
 							hasExit = true;
+
+							Debug.DrawLine(transform.position, e, Color.cyan, 0.1f, false);
+
 						}
 					}
 				}
@@ -153,17 +156,18 @@ public class enemy : MonoBehaviour {
 			}
 
 			if (hasExit) {
+				Debug.Log ("hasExit");
 				hasIntermediate = true;
 				intermediatePos = exit;
 				return false;
 			}
 
 			return true;
-
 	
 		}
 
-		Debug.Log ("richable");
+		Debug.DrawLine(transform.position, pos, Color.green, 0.1f, false);
+
 
 		return true;
 	}
