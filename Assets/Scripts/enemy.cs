@@ -82,8 +82,11 @@ public class enemy : MonoBehaviour {
 		targetTime -= Time.deltaTime;
 
 		if ((target || shouldCheck) && targetTime <= 0.0f) {
+			if (target)
+				weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 			target = null;
 			shouldCheck = false;
+
 		}
 	}
 

@@ -13,6 +13,9 @@ public class endPanel : MonoBehaviour {
 	private int selected;
 	private Color textColor;
 
+	public AudioSource aWin;
+	public AudioSource aLose;
+
 	// Use this for initialization
 	void Start () {
 		textColor = next.color;
@@ -89,11 +92,13 @@ public class endPanel : MonoBehaviour {
 		lost = l;
 		cg.blocksRaycasts = true;
 		if (lost) {
+			aLose.Play();
 			headline.text = "GAME OVER !";
 			next.text = "Retry";
 		}
 		else
 		{
+			aWin.Play();
 			headline.text = "GOOD JOB";
 			next.text = "Next Level";
 		}
