@@ -74,8 +74,12 @@ public class endPanel : MonoBehaviour {
 				}
 				else
 				{
-					if (selected == 1)
-						Application.LoadLevel(Application.loadedLevel + 1);
+					if (selected == 1) {
+						if (Application.loadedLevel + 1 < Application.levelCount )
+							Application.LoadLevel(Application.loadedLevel + 1);
+						else
+							Application.LoadLevel(0);
+					}
 					else
 						Application.LoadLevel(0);
 				}
