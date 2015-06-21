@@ -137,7 +137,7 @@ public class enemy : MonoBehaviour {
 
 			foreach (Vector3 e in exits) {
 
-				if (Vector3.Distance (e, transform.position) > 0.01f) {
+				if (Vector3.Distance (e, transform.position) > 0.05f) {
 					float range = Vector3.Distance(transform.position, e);
 					RaycastHit2D h = Physics2D.Raycast(transform.position, (e - transform.position), range, layerMask);
 					
@@ -160,7 +160,7 @@ public class enemy : MonoBehaviour {
 
 			return true;
 
-		
+	
 		}
 
 		Debug.Log ("richable");
