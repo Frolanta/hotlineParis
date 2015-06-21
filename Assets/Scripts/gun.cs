@@ -46,6 +46,8 @@ public class gun : MonoBehaviour {
 		while (ammo > 0 || ammo == -1) {
 
 			for (int i = 0 ; i < burstCount ; i++) {
+			
+
 				GameObject ob = (GameObject)Instantiate(projectile, this.transform.position, this.transform.rotation);
 				ob.GetComponent<projectile>().ignoreCollider(ignore);
 				if (ammo > 0)
@@ -54,10 +56,11 @@ public class gun : MonoBehaviour {
 				if (ammo == 0) {
 					animator.SetBool("noAmmo", true);
 				}
-				yield return new WaitForSeconds(burstFireRate);
+				new WaitForSeconds(burstFireRate);
 			}
 
 			yield return new WaitForSeconds(fireRate);
 		}
 	}
+	
 }
