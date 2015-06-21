@@ -12,7 +12,7 @@ public class weapon : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		sr = gameObject.GetComponent<SpriteRenderer> ();
 	}
 	
@@ -26,6 +26,7 @@ public class weapon : MonoBehaviour {
 	}
 
 	public void hide() {
+		Debug.Log ("hide");
 		sr.enabled = false;
 	}
 

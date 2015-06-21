@@ -8,6 +8,11 @@ public class enemy : MonoBehaviour {
 	public Transform[] checkpoints;
 	public float speed = 1.0f;
 
+	private GameObject weapon = null;
+	public GameObject attachWeapon;
+
+	public GameObject[] possibleWeapons;
+
 
 	private Vector3 nextCheckpoint;
 	private int checkpointIndex = 0;
@@ -36,9 +41,16 @@ public class enemy : MonoBehaviour {
 			nextCheckpoint = checkpoints[0].position;
 		}
 
+		weapon = (GameObject)Instantiate(possibleWeapons[Random.Range(0, possibleWeapons.Length)], Vector3.zero, Quaternion.identity);
+		weapon.transform.SetParent(attachWeapon.transform, false);
+
+		weapon.GetComponent<weapon>().hide ();
+		weapon.GetComponent<gun>().ammo = -1;
+		attachWeapon.GetComponent<SpriteRenderer>().sprite = weapon.GetComponent<weapon>().getAttachedSprite();
+
+		Destroy(weapon.GetComponent<Collider2D>());
 
 		exits = new List<Vector3>();
-
 
 		GameObject[] doors = GameObject.FindGameObjectsWithTag("door");
 
@@ -92,7 +104,6 @@ public class enemy : MonoBehaviour {
 			lookAtPosition (nextCheckpoint);
 
 			if (Vector3.Distance (transform.position, nextCheckpoint) <= Time.fixedDeltaTime * speed) {
-				Debug.Log ("change checkpoints");
 				if (checkpointIndex + 1 < checkpoints.Length)
 					checkpointIndex++;
 				else
@@ -197,12 +208,21 @@ public class enemy : MonoBehaviour {
 			RaycastHit2D hit = Physics2D.Raycast(transform.position, (other.transform.position - transform.position), maxRange, layerMask);
 			if(hit.collider != null && hit.collider.gameObject.tag == "Player") {
 				Debug.DrawLine(transform.position, other.transform.position, Color.blue, 0.01f, false);
+
+				if (!target)
+					weapon.SendMessage("startAttack", this.gameObject.GetComponent<Collider2D>(), SendMessageOptions.DontRequireReceiver);
+
 				target = other.transform;
+
+
 			} else if (target) {
 				Debug.DrawLine(transform.position, other.transform.position, Color.red, 0.5f, false);
 				checkPosition = new Vector3 (target.position.x, target.position.y, target.position.z);
 				shouldCheck = true;
 				target = null;
+
+				weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+
 			} else {
 				target = null;
 			}
