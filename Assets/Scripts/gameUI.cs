@@ -9,7 +9,6 @@ public class gameUI : MonoBehaviour {
 	public Text ammoCount;
 	public endPanel end;
 
-
 	public static gameUI instance;
 
 	void Awake () {

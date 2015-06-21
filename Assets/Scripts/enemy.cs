@@ -258,7 +258,8 @@ public class enemy : MonoBehaviour {
 	}
 	
 	void die () {
-		
+
+		enemyManager.instance.removeEnnemy (this.gameObject);
 		weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 		animator.SetTrigger ("dead");
 		Destroy (this.gameObject, 1);
@@ -266,6 +267,7 @@ public class enemy : MonoBehaviour {
 		Destroy (this.gameObject.GetComponent<Collider2D>());
 		Destroy (this);
 		audioSource.Play ();
+
 	}
 	
 	void OnCollisionEnter2D(Collision2D collision) {
