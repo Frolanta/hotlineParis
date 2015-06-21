@@ -21,6 +21,9 @@ public class character : MonoBehaviour {
 	public AudioSource audioSource;
 	public AudioClip pickupClip;
 	public AudioClip ejectWeapon;
+	public AudioClip dieClip;
+
+	public Animator animator;
 
 
 	// Use this for initialization
@@ -178,6 +181,22 @@ public class character : MonoBehaviour {
 			weapon = null;
 			attachWeapon.GetComponent<SpriteRenderer>().sprite = null;
 		}
+	}
 
+
+	public void takeDamage() {
+		//die ();
+	}
+	
+	void die () {
+		
+		weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+		animator.SetTrigger ("dead");
+		Destroy (this.gameObject, 1);
+		Destroy (this.gameObject.GetComponent<Rigidbody2D>());
+		Destroy (this.gameObject.GetComponent<Collider2D>());
+		Destroy (this);
+		audioSource.clip = dieClip;
+		audioSource.Play ();
 	}
 }

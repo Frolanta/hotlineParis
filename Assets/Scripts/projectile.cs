@@ -23,8 +23,17 @@ public class projectile : MonoBehaviour {
 	}
 
 	public void ignoreCollider(Collider2D c) {
-		Physics2D.IgnoreCollision (this.gameObject.GetComponent<Collider2D>(), c);
 
+		if (c.gameObject.tag == "enemy") {
+			GameObject[] ennemies = GameObject.FindGameObjectsWithTag("enemy");
+
+			foreach (GameObject e in ennemies) {
+				Physics2D.IgnoreCollision (this.gameObject.GetComponent<Collider2D>(), e.GetComponent<Collider2D>());
+			}
+
+		}
+		else
+			Physics2D.IgnoreCollision (this.gameObject.GetComponent<Collider2D>(), c);
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {

@@ -30,6 +30,12 @@ public class enemy : MonoBehaviour {
 
 	private List<Vector3> exits;
 
+
+	public AudioSource audioSource;
+	public Animator animator;
+
+	private bool stun = false;
+
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody2D> ();
@@ -71,6 +77,9 @@ public class enemy : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+
+		if (stun)
+			return ;
 
 		if (target) {
 
@@ -167,7 +176,6 @@ public class enemy : MonoBehaviour {
 			}
 
 			if (hasExit) {
-				Debug.Log ("hasExit");
 				hasIntermediate = true;
 				intermediatePos = exit;
 				return false;
@@ -201,6 +209,9 @@ public class enemy : MonoBehaviour {
 
 
 	void OnTriggerStay2D(Collider2D other) {
+		if (stun)
+			return;
+
 		if (other.tag == "Player") {
 			LayerMask layerMask = ~(1 << LayerMask.NameToLayer ("enemy") | 1 << LayerMask.NameToLayer ("weapon"));
 
@@ -230,6 +241,9 @@ public class enemy : MonoBehaviour {
 	}
 
 	void OnTriggerExit2D(Collider2D other) {
+		if (stun)
+			return;
+
 		if(other.tag == "Player") {
 			if (target) {
 				checkPosition = new Vector3 (target.position.x, target.position.y, target.position.z);
@@ -237,5 +251,51 @@ public class enemy : MonoBehaviour {
 				target = null;
 			}
 		} 
+	}
+
+	public void takeDamage() {
+		die ();
+	}
+	
+	void die () {
+		
+		weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+		animator.SetTrigger ("dead");
+		Destroy (this.gameObject, 1);
+		Destroy (this.gameObject.GetComponent<Rigidbody2D>());
+		Destroy (this.gameObject.GetComponent<Collider2D>());
+		Destroy (this);
+		audioSource.Play ();
+	}
+	
+	void OnCollisionEnter2D(Collision2D collision) {
+		if (stun)
+			return ;
+
+		if (collision.gameObject.tag == "weapon") {
+			if (collision.gameObject.name == "katana(Clone)") {
+				die ();
+			}
+
+			else if (!stun && collision.gameObject.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > 15.0f) {
+				Stun();
+			}
+		}
+	}
+
+	void Stun () {
+		weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+		animator.SetBool("stun", true);
+		stun = true;
+		target = null;
+		shouldCheck = false;
+		hasIntermediate = false;
+
+		Invoke ("unStun", 2);
+	}
+
+	void unStun() {
+		animator.SetBool("stun", false);
+		stun = false;
 	}
 }

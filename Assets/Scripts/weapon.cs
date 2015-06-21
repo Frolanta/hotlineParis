@@ -26,7 +26,6 @@ public class weapon : MonoBehaviour {
 	}
 
 	public void hide() {
-		Debug.Log ("hide");
 		sr.enabled = false;
 	}
 

@@ -38,10 +38,11 @@ public class gun : MonoBehaviour {
 	}
 
 	public void stopAttack() {
-		StopCoroutine (routine);
+		 StopCoroutine (routine);
 	}
 
 	IEnumerator attackRoutine (Collider2D ignore) {
+
 		while (ammo > 0 || ammo == -1) {
 
 			for (int i = 0 ; i < burstCount ; i++) {
