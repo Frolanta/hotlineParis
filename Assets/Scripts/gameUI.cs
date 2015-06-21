@@ -7,6 +7,7 @@ public class gameUI : MonoBehaviour {
 	public Texture2D crosshair;
 	public Text weaponName;
 	public Text ammoCount;
+	public endPanel end;
 
 
 	public static gameUI instance;
@@ -26,6 +27,18 @@ public class gameUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void dead()
+	{
+		//Time.timeScale = 0;
+		end.activate (true);
+	}
+
+	public void endLevel()
+	{
+		//Time.timeScale = 0;
+		end.activate (false);
 	}
 
 	public void setWeapon(string str) {

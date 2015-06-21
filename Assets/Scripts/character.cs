@@ -79,35 +79,35 @@ public class character : MonoBehaviour {
 		}
 	
 
-		if(Input.GetKey(KeyCode.W)){
+		if(Input.GetKey(KeyCode.W) || Input.GetKeyDown (KeyCode.UpArrow)){
 			up = true;
 			down = false;
 		}
-		else if(Input.GetKey(KeyCode.S)){
+		else if(Input.GetKey(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow)){
 			up = false;
 			down = true;
 		}
 		
-		if(Input.GetKey(KeyCode.A)){
+		if(Input.GetKey(KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)){
 			left = true;
 			right = false;
 		}
-		else if(Input.GetKey(KeyCode.D)){
+		else if(Input.GetKey(KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)){
 			left = false;
 			right = true;
 		}
 
-		if(Input.GetKeyUp(KeyCode.W)){
+		if(Input.GetKeyUp(KeyCode.W) || Input.GetKeyDown (KeyCode.UpArrow)){
 			up = false;
 		}
-		if(Input.GetKeyUp(KeyCode.S)){
+		if(Input.GetKeyUp(KeyCode.S) || Input.GetKeyDown (KeyCode.DownArrow)){
 			down = false;
 		}
 		
-		if(Input.GetKeyUp(KeyCode.A)){
+		if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)){
 			left = false;
 		}
-		if(Input.GetKeyUp(KeyCode.D)){
+		if(Input.GetKeyUp(KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)){
 			right = false;
 		}
 
@@ -185,12 +185,12 @@ public class character : MonoBehaviour {
 
 
 	public void takeDamage() {
-		//die ();
+		die ();
 	}
 	
 	void die () {
-		
-		weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
+		if (weapon)
+			weapon.SendMessage("stopAttack", null, SendMessageOptions.DontRequireReceiver);
 		animator.SetTrigger ("dead");
 		Destroy (this.gameObject, 1);
 		Destroy (this.gameObject.GetComponent<Rigidbody2D>());
@@ -198,5 +198,6 @@ public class character : MonoBehaviour {
 		Destroy (this);
 		audioSource.clip = dieClip;
 		audioSource.Play ();
+		gameUI.instance.dead ();
 	}
 }
