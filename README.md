@@ -2,7 +2,7 @@
 
 Unity3D Hotline Miami clone done 48hrs for a school project at 42 Paris in 2015.
 
-###Controls
+### Controls
 
 - Use arrow keys and ENTER in the main menu
 - WASD to move. (use a qwerty keyboard layout)
